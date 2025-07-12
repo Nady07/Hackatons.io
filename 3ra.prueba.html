@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yape Plus - Billetera Digital con USDT</title>
+    <style>
+        :root {
+            --primary-color: #8a2be2; /* Morado principal */
+            --secondary-color: #4b0082; /* Morado oscuro */
+            --accent-color: #9370db; /* Morado claro */
+            --text-color: #f8f8ff; /* Blanco hueso */
+            --light-bg: #f5f0ff; /* Morado muy claro */
+            --white: #ffffff;
+            --dark-text: #2e0854; /* Morado muy oscuro para texto */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background-color: var(--white);
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 24px;
+            color: var(--white);
+        }
+        
+        .profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .balance-section {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .balance-title {
+            font-size: 16px;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+        
+        .balance-amount {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .wallet-selector {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 3px;
+        }
+        
+        .wallet-option {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            border-radius: 17px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .wallet-option.active {
+            background-color: var(--white);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .quick-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            background-color: var(--white);
+            border-bottom: 1px solid #eee;
+        }
+        
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        
+        .action-label {
+            font-size: 12px;
+            color: var(--dark-text);
+        }
+        
+        .conversion-section {
+            padding: 20px;
+            margin: 15px;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+        
+        .conversion-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--dark-text);
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: var(--light-bg);
+        }
+        
+        .convert-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .convert-btn:active {
+            background-color: var(--secondary-color);
+        }
+        
+        .history-section {
+            padding: 20px;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .history-item:active {
+            background-color: var(--light-bg);
+        }
+        
+        .history-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary-color);
+        }
+        
+        .history-details h4 {
+            font-size: 16px;
+            margin-bottom: 3px;
+            color: var(--dark-text);
+        }
+        
+        .history-details p {
+            font-size: 13px;
+            color: var(--text-color);
+        }
+        
+        .history-amount {
+            font-weight: bold;
+            align-self: center;
+        }
+        
+        .positive {
+            color: var(--accent-color);
+        }
+        
+        .negative {
+            color: #ff5a5f;
+        }
+        
+        .nav-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            background-color: var(--white);
+            position: sticky;
+            bottom: 0;
+            border-top: 1px solid #eee;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-color);
+            font-size: 12px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        /* Modales */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .close-modal {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .modal-btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        /* QR Code */
+        .qr-code {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .qr-code img {
+            width: 200px;
+            height: 200px;
+            margin: 10px 0;
+        }
+        
+        /* Transfer form */
+        .transfer-form input, .transfer-form select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: var(--light-bg);
+        }
+        
+        /* Stats Page */
+        .stats-container {
+            padding: 20px;
+            display: none;
+        }
+        
+        .stats-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .stats-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .stats-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .stats-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        /* Settings Page */
+        .settings-container {
+            padding: 20px;
+            display: none;
+        }
+        
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .settings-label {
+            font-size: 16px;
+            color: var(--dark-text);
+        }
+        
+        .settings-toggle {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .settings-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+        
+        /* Add Funds Button */
+        .add-funds-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .add-funds-btn i {
+            margin-right: 5px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="notification" id="notification">Operación exitosa!</div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">Yape Plus</div>
+            <div class="profile" id="profile-btn">JP</div>
+        </header>
+        
+        <section class="balance-section">
+            <div class="balance-title">Saldo total</div>
+            <div class="balance-amount" id="balance-amount">$1,250.50</div>
+            
+            <div class="wallet-selector">
+                <div class="wallet-option active" id="local-currency">Bolivianos (BOB)</div>
+                <div class="wallet-option" id="usdt-currency">USDT</div>
+            </div>
+            
+            <button class="add-funds-btn" id="add-funds-btn">
+                <i class="fas fa-plus"></i> Agregar Fondos
+            </button>
+        </section>
+        
+        <section class="quick-actions">
+            <div class="action-btn" id="transfer-btn">
+                <div class="action-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="action-label">Transferir</div>
+            </div>
+            <div class="action-btn" id="qr-btn">
+                <div class="action-icon">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="action-label">Pagar QR</div>
+            </div>
+            <div class="action-btn" id="receive-btn">
+                <div class="action-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="action-label">Cobrar</div>
+            </div>
+            <div class="action-btn" id="convert-btn">
+                <div class="action-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="action-label">Convertir</div>
+            </div>
+        </section>
+        
+        <section class="conversion-section fade-in" id="conversion-section">
+            <div class="section-title">
+                <i class="fas fa-exchange-alt"></i> Conversión Directa
+            </div>
+            
+            <div class="conversion-form">
+                <div class="input-group">
+                    <label for="from-amount">Monto a convertir</label>
+                    <input type="number" id="from-amount" placeholder="Ej: 100">
+                </div>
+                
+                <div class="input-group">
+                    <label for="from-currency">De</label>
+                    <select id="from-currency">
+                        <option value="BOB">Bolivianos (BOB)</option>
+                        <option value="USDT">USDT</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="to-currency">A</label>
+                    <select id="to-currency">
+                        <option value="USDT">USDT</option>
+                        <option value="BOB">Bolivianos (BOB)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group tooltip">
+                    <label for="rate">Tasa de cambio <i class="fas fa-info-circle"></i></label>
+                    <input type="text" id="rate" value="1 USDT = 6.96 BOB" readonly>
+                    <span class="tooltiptext">Tasa actualizada en tiempo real sin comisiones ocultas</span>
+                </div>
+                
+                <button class="convert-btn" id="perform-convert">Convertir Ahora</button>
+            </div>
+        </section>
+        
+        <section class="history-section" id="history-section">
+            <div class="section-title">
+                <i class="fas fa-history"></i> Historial Reciente
+            </div>
+            
+            <div class="history-item" id="transaction-1">
+                <div class="history-info">
+                    <div class="history-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="history-details">
+                        <h4>Supermercado Ketal</h4>
+                        <p>Ayer, 15:42</p>
+                    </div>
+                </div>
+                <div class="history-amount negative">- 150 BOB</div>
+            </div>
+            
+            <div class="history-item" id="transaction-2">
+                <div class="history-info">
+                    <div class="history-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="history-details">
+                        <h4>Conversión a USDT</h4>
+                        <p>Ayer, 12:15</p>
+                    </div>
+                </div>
+                <div class="history-amount negative">- 500 BOB</div>
+            </div>
+            
+            <div class="history-item" id="transaction-3">
+                <div class="history-info">
+                    <div class="history-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="history-details">
+                        <h4>Recibiste USDT</h4>
+                        <p>20/05/2023, 09:30</p>
+                    </div>
+                </div>
+                <div class="history-amount positive">+ 71.84 USDT</div>
+            </div>
+        </section>
+        
+        <!-- Stats Page -->
+        <section class="stats-container" id="stats-container">
+            <div class="stats-header">
+                <h2 style="color: var(--secondary-color);">Mis Estadísticas</h2>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-title">Gastos este mes</div>
+                <div class="stats-value">- 650 BOB</div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-title">Ingresos este mes</div>
+                <div class="stats-value">+ 2,150 BOB</div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-title">USDT en tu billetera</div>
+                <div class="stats-value">350.25 USDT</div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-title">Ahorro acumulado</div>
+                <div class="stats-value">1,250 BOB</div>
+            </div>
+        </section>
+        
+        <!-- Settings Page -->
+        <section class="settings-container" id="settings-container">
+            <div class="section-title">
+                <i class="fas fa-cog"></i> Configuración
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-label">Notificaciones</div>
+                <label class="settings-toggle">
+                    <input type="checkbox" checked id="notifications-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-label">Huella digital</div>
+                <label class="settings-toggle">
+                    <input type="checkbox" id="fingerprint-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-label">Modo oscuro</div>
+                <label class="settings-toggle">
+                    <input type="checkbox" id="darkmode-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-item" id="privacy-settings">
+                <div class="settings-label">Privacidad</div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            
+            <div class="settings-item" id="security-settings">
+                <div class="settings-label">Seguridad</div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            
+            <div class="settings-item" id="about-settings">
+                <div class="settings-label">Acerca de Yape Plus</div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </section>
+        
+        <nav class="nav-bar">
+            <div class="nav-item active" id="nav-home">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <div>Inicio</div>
+            </div>
+            <div class="nav-item" id="nav-wallet">
+                <div class="nav-icon"><i class="fas fa-wallet"></i></div>
+                <div>Billetera</div>
+            </div>
+            <div class="nav-item" id="nav-stats">
+                <div class="nav-icon"><i class="fas fa-chart-line"></i></div>
+                <div>Estadísticas</div>
+            </div>
+            <div class="nav-item" id="nav-settings">
+                <div class="nav-icon"><i class="fas fa-cog"></i></div>
+                <div>Ajustes</div>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- Modales -->
+    <div class="modal" id="profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Mi Perfil</div>
+                <div class="close-modal" id="close-profile">&times;</div>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nombre:</strong> Juan Pérez</p>
+                <p><strong>CI:</strong> 1234567 LP</p>
+                <p><strong>Teléfono:</strong> +591 71234567</p>
+                <p><strong>Correo:</strong> juan.perez@example.com</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="logout-btn">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="transfer-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Transferir Dinero</div>
+                <div class="close-modal" id="close-transfer">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="transfer-form">
+                    <select id="transfer-currency">
+                        <option value="BOB">Bolivianos (BOB)</option>
+                        <option value="USDT">USDT</option>
+                    </select>
+                    <input type="number" id="transfer-amount" placeholder="Monto a transferir">
+                    <input type="text" id="transfer-phone" placeholder="Teléfono o YapeCode">
+                    <input type="text" id="transfer-message" placeholder="Mensaje (opcional)">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="cancel-transfer">Cancelar</button>
+                <button class="modal-btn modal-btn-primary" id="confirm-transfer">Transferir</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="qr-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Pagar con QR</div>
+                <div class="close-modal" id="close-qr">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="qr-code">
+                    <p>Escanea este código QR para pagar</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=yapeplus://payment/123456" alt="QR Code">
+                    <p>O comparte tu YapeCode: <strong>123456</strong></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" id="close-qr-btn">Listo</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="receive-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Cobrar Dinero</div>
+                <div class="close-modal" id="close-receive">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="transfer-form">
+                    <select id="receive-currency">
+                        <option value="BOB">Bolivianos (BOB)</option>
+                        <option value="USDT">USDT</option>
+                    </select>
+                    <input type="number" id="receive-amount" placeholder="Monto a cobrar">
+                    <input type="text" id="receive-message" placeholder="Concepto (opcional)">
+                </div>
+                <div class="qr-code" style="padding: 10px 0;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=yapeplus://request/789012" alt="QR Code">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="cancel-receive">Cancelar</button>
+                <button class="modal-btn modal-btn-primary" id="confirm-receive">Generar Solicitud</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="add-funds-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Agregar Fondos</div>
+                <div class="close-modal" id="close-add-funds">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="transfer-form">
+                    <select id="funds-currency">
+                        <option value="BOB">Bolivianos (BOB)</option>
+                        <option value="USDT">USDT</option>
+                    </select>
+                    <input type="number" id="funds-amount" placeholder="Monto a agregar">
+                    <select id="funds-method">
+                        <option value="card">Tarjeta de crédito/débito</option>
+                        <option value="transfer">Transferencia bancaria</option>
+                        <option value="cash">Efectivo en punto de pago</option>
+                        <option value="crypto">Otra criptomoneda</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="cancel-add-funds">Cancelar</button>
+                <button class="modal-btn modal-btn-primary" id="confirm-add-funds">Continuar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="privacy-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Configuración de Privacidad</div>
+                <div class="close-modal" id="close-privacy">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="settings-item">
+                    <div class="settings-label">Mostrar saldo</div>
+                    <label class="settings-toggle">
+                        <input type="checkbox" checked id="show-balance-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-label">Mostrar nombre completo</div>
+                    <label class="settings-toggle">
+                        <input type="checkbox" checked id="show-name-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-label">Compartir datos para análisis</div>
+                    <label class="settings-toggle">
+                        <input type="checkbox" id="share-data-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" id="save-privacy">Guardar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="security-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Configuración de Seguridad</div>
+                <div class="close-modal" id="close-security">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="settings-item">
+                    <div class="settings-label">Autenticación de dos factores</div>
+                    <label class="settings-toggle">
+                        <input type="checkbox" id="twofa-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-label">Requerir PIN para transacciones</div>
+                    <label class="settings-toggle">
+                        <input type="checkbox" checked id="pin-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-item">
+                    <div class="settings-label">Notificaciones de seguridad</div>
+                    <label class="settings-toggle">
+                        <input type="checkbox" checked id="security-notifications-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" id="save-security">Guardar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="about-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Acerca de Yape Plus</div>
+                <div class="close-modal" id="close-about">&times;</div>
+            </div>
+            <div class="modal-body">
+                <p><strong>Versión:</strong> 1.0.0</p>
+                <p><strong>Desarrollado por:</strong> Equipo Yape Plus</p>
+                <p><strong>Contacto:</strong> soporte@yapeplus.com</p>
+                <p><strong>Términos y condiciones:</strong> yapeplus.com/terms</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" id="close-about-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Variables de estado
+        let currentBalanceBOB = 1250.50;
+        let currentBalanceUSDT = 350.25;
+        let currentView = 'bob'; // 'bob' o 'usdt'
+        let exchangeRate = 6.96;
+        let transactions = [
+            {
+                id: 1,
+                description: "Supermercado Ketal",
+                amount: -150,
+                currency: "BOB",
+                date: "Ayer, 15:42",
+                type: "purchase",
+                icon: "shopping-bag"
+            },
+            {
+                id: 2,
+                description: "Conversión a USDT",
+                amount: -500,
+                currency: "BOB",
+                date: "Ayer, 12:15",
+                type: "conversion-out",
+                icon: "exchange-alt"
+            },
+            {
+                id: 3,
+                description: "Recibiste USDT",
+                amount: 71.84,
+                currency: "USDT",
+                date: "20/05/2023, 09:30",
+                type: "conversion-in",
+                icon: "exchange-alt"
+            }
+        ];
+        
+        // Elementos del DOM
+        const balanceAmount = document.getElementById('balance-amount');
+        const localCurrencyBtn = document.getElementById('local-currency');
+        const usdtCurrencyBtn = document.getElementById('usdt-currency');
+        const fromAmount = document.getElementById('from-amount');
+        const fromCurrency = document.getElementById('from-currency');
+        const toCurrency = document.getElementById('to-currency');
+        const rateInput = document.getElementById('rate');
+        const performConvertBtn = document.getElementById('perform-convert');
+        
+        // Secciones de la aplicación
+        const homeSection = document.getElementById('conversion-section');
+        const historySection = document.getElementById('history-section');
+        const statsContainer = document.getElementById('stats-container');
+        const settingsContainer = document.getElementById('settings-container');
+        
+        // Botones de acción
+        const transferBtn = document.getElementById('transfer-btn');
+        const qrBtn = document.getElementById('qr-btn');
+        const receiveBtn = document.getElementById('receive-btn');
+        const convertBtn = document.getElementById('convert-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const addFundsBtn = document.getElementById('add-funds-btn');
+        
+        // Modales
+        const profileModal = document.getElementById('profile-modal');
+        const transferModal = document.getElementById('transfer-modal');
+        const qrModal = document.getElementById('qr-modal');
+        const receiveModal = document.getElementById('receive-modal');
+        const addFundsModal = document.getElementById('add-funds-modal');
+        const privacyModal = document.getElementById('privacy-modal');
+        const securityModal = document.getElementById('security-modal');
+        const aboutModal = document.getElementById('about-modal');
+        
+        // Botones de cierre de modales
+        const closeProfileBtn = document.getElementById('close-profile');
+        const closeTransferBtn = document.getElementById('close-transfer');
+        const closeQrBtn = document.getElementById('close-qr');
+        const closeReceiveBtn = document.getElementById('close-receive');
+        const closeAddFundsBtn = document.getElementById('close-add-funds');
+        const closePrivacyBtn = document.getElementById('close-privacy');
+        const closeSecurityBtn = document.getElementById('close-security');
+        const closeAboutBtn = document.getElementById('close-about');
+        
+        // Botones de acción en modales
+        const confirmTransferBtn = document.getElementById('confirm-transfer');
+        const cancelTransferBtn = document.getElementById('cancel-transfer');
+        const closeQrModalBtn = document.getElementById('close-qr-btn');
+        const confirmReceiveBtn = document.getElementById('confirm-receive');
+        const cancelReceiveBtn = document.getElementById('cancel-receive');
+        const confirmAddFundsBtn = document.getElementById('confirm-add-funds');
+        const cancelAddFundsBtn = document.getElementById('cancel-add-funds');
+        const logoutBtn = document.getElementById('logout-btn');
+        const savePrivacyBtn = document.getElementById('save-privacy');
+        const saveSecurityBtn = document.getElementById('save-security');
+        const closeAboutModalBtn = document.getElementById('close-about-btn');
+        
+        // Configuración
+        const privacySettingsBtn = document.getElementById('privacy-settings');
+        const securitySettingsBtn = document.getElementById('security-settings');
+        const aboutSettingsBtn = document.getElementById('about-settings');
+        
+        // Navegación
+        const navItems = document.querySelectorAll('.nav-item');
+        const navHome = document.getElementById('nav-home');
+        const navWallet = document.getElementById('nav-wallet');
+        const navStats = document.getElementById('nav-stats');
+        const navSettings = document.getElementById('nav-settings');
+        
+        // Notificación
+        const notification = document.getElementById('notification');
+        
+        // Funciones de utilidad
+        function formatCurrency(amount, currency) {
+            if (currency === 'BOB') {
+                return '$' + amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            } else {
+                return amount.toFixed(2) + ' USDT';
+            }
+        }
+        
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function updateBalanceDisplay() {
+            if (currentView === 'bob') {
+                balanceAmount.textContent = formatCurrency(currentBalanceBOB, 'BOB');
+            } else {
+                balanceAmount.textContent = formatCurrency(currentBalanceUSDT, 'USDT');
+            }
+        }
+        
+        function addTransaction(description, amount, currency, type, icon = 'exchange-alt') {
+            const newTransaction = {
+                id: transactions.length + 1,
+                description,
+                amount,
+                currency,
+                date: new Date().toLocaleString('es-BO', { 
+                    day: 'numeric', 
+                    month: 'numeric', 
+                    year: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                }),
+                type,
+                icon
+            };
+            
+            transactions.unshift(newTransaction);
+            renderTransactions();
+        }
+        
+        function renderTransactions() {
+            const historySection = document.getElementById('history-section');
+            // Limpiar transacciones existentes (excepto el título)
+            while (historySection.children.length > 1) {
+                historySection.removeChild(historySection.lastChild);
+            }
+            
+            // Mostrar solo las últimas 3 transacciones
+            const recentTransactions = transactions.slice(0, 3);
+            
+            recentTransactions.forEach(transaction => {
+                const transactionElement = document.createElement('div');
+                transactionElement.className = 'history-item';
+                transactionElement.id = `transaction-${transaction.id}`;
+                transactionElement.innerHTML = `
+                    <div class="history-info">
+                        <div class="history-icon">
+                            <i class="fas fa-${transaction.icon}"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>${transaction.description}</h4>
+                            <p>${transaction.date}</p>
+                        </div>
+                    </div>
+                    <div class="history-amount ${transaction.amount < 0 ? 'negative' : 'positive'}">
+                        ${transaction.amount < 0 ? '-' : '+'} ${Math.abs(transaction.amount).toFixed(2)} ${transaction.currency}
+                    </div>
+                `;
+                
+                historySection.appendChild(transactionElement);
+                
+                // Agregar event listener para mostrar detalles
+                transactionElement.addEventListener('click', () => {
+                    showNotification(`${transaction.description}: ${transaction.amount} ${transaction.currency}`);
+                });
+            });
+        }
+        
+        function showHomeView() {
+            homeSection.style.display = 'block';
+            historySection.style.display = 'block';
+            statsContainer.style.display = 'none';
+            settingsContainer.style.display = 'none';
+        }
+        
+        function showWalletView() {
+            homeSection.style.display = 'none';
+            historySection.style.display = 'block';
+            statsContainer.style.display = 'none';
+            settingsContainer.style.display = 'none';
+        }
+        
+        function showStatsView() {
+            homeSection.style.display = 'none';
+            historySection.style.display = 'none';
+            statsContainer.style.display = 'block';
+            settingsContainer.style.display = 'none';
+        }
+        
+        function showSettingsView() {
+            homeSection.style.display = 'none';
+            historySection.style.display = 'none';
+            statsContainer.style.display = 'none';
+            settingsContainer.style.display = 'block';
+        }
+        
+        // Event Listeners
+        localCurrencyBtn.addEventListener('click', () => {
+            localCurrencyBtn.classList.add('active');
+            usdtCurrencyBtn.classList.remove('active');
+            currentView = 'bob';
+            updateBalanceDisplay();
+        });
+        
+        usdtCurrencyBtn.addEventListener('click', () => {
+            usdtCurrencyBtn.classList.add('active');
+            localCurrencyBtn.classList.remove('active');
+            currentView = 'usdt';
+            updateBalanceDisplay();
+        });
+        
+        fromCurrency.addEventListener('change', () => {
+            if (fromCurrency.value === 'BOB') {
+                toCurrency.value = 'USDT';
+                rateInput.value = `1 USDT = ${exchangeRate} BOB`;
+            } else {
+                toCurrency.value = 'BOB';
+                rateInput.value = `1 USDT = ${exchangeRate} BOB`;
+            }
+        });
+        
+        toCurrency.addEventListener('change', () => {
+            if (toCurrency.value === 'BOB') {
+                fromCurrency.value = 'USDT';
+                rateInput.value = `1 USDT = ${exchangeRate} BOB`;
+            } else {
+                fromCurrency.value = 'BOB';
+                rateInput.value = `1 USDT = ${exchangeRate} BOB`;
+            }
+        });
+        
+        performConvertBtn.addEventListener('click', () => {
+            const amount = parseFloat(fromAmount.value);
+            
+            if (isNaN(amount)) {
+                showNotification('Ingresa un monto válido');
+                return;
+            }
+            
+            if (fromCurrency.value === 'BOB' && amount > currentBalanceBOB) {
+                showNotification('Saldo insuficiente en BOB');
+                return;
+            }
+            
+            if (fromCurrency.value === 'USDT' && amount > currentBalanceUSDT) {
+                showNotification('Saldo insuficiente en USDT');
+                return;
+            }
+            
+            if (fromCurrency.value === 'BOB') {
+                // Convertir BOB a USDT
+                const convertedAmount = amount / exchangeRate;
+                currentBalanceBOB -= amount;
+                currentBalanceUSDT += convertedAmount;
+                addTransaction(`Conversión a USDT`, amount, 'BOB', 'conversion-out');
+                addTransaction(`Recibiste USDT`, convertedAmount, 'USDT', 'conversion-in');
+                showNotification(`Convertiste ${amount.toFixed(2)} BOB a ${convertedAmount.toFixed(2)} USDT`);
+            } else {
+                // Convertir USDT a BOB
+                const convertedAmount = amount * exchangeRate;
+                currentBalanceUSDT -= amount;
+                currentBalanceBOB += convertedAmount;
+                addTransaction(`Conversión a BOB`, amount, 'USDT', 'conversion-out');
+                addTransaction(`Recibiste BOB`, convertedAmount, 'BOB', 'conversion-in');
+                showNotification(`Convertiste ${amount.toFixed(2)} USDT a ${convertedAmount.toFixed(2)} BOB`);
+            }
+            
+            updateBalanceDisplay();
+            fromAmount.value = '';
+        });
+        
+        // Botones de acción
+        transferBtn.addEventListener('click', () => {
+            transferModal.style.display = 'flex';
+        });
+        
+        qrBtn.addEventListener('click', () => {
+            qrModal.style.display = 'flex';
+        });
+        
+        receiveBtn.addEventListener('click', () => {
+            receiveModal.style.display = 'flex';
+        });
+        
+        convertBtn.addEventListener('click', () => {
+            document.getElementById('conversion-section').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        profileBtn.addEventListener('click', () => {
+            profileModal.style.display = 'flex';
+        });
+        
+        addFundsBtn.addEventListener('click', () => {
+            addFundsModal.style.display = 'flex';
+        });
+        
+        // Configuración
+        privacySettingsBtn.addEventListener('click', () => {
+            privacyModal.style.display = 'flex';
+        });
+        
+        securitySettingsBtn.addEventListener('click', () => {
+            securityModal.style.display = 'flex';
+        });
+        
+        aboutSettingsBtn.addEventListener('click', () => {
+            aboutModal.style.display = 'flex';
+        });
+        
+        // Cerrar modales
+        closeProfileBtn.addEventListener('click', () => {
+            profileModal.style.display = 'none';
+        });
+        
+        closeTransferBtn.addEventListener('click', () => {
+            transferModal.style.display = 'none';
+        });
+        
+        closeQrBtn.addEventListener('click', () => {
+            qrModal.style.display = 'none';
+        });
+        
+        closeReceiveBtn.addEventListener('click', () => {
+            receiveModal.style.display = 'none';
+        });
+        
+        closeAddFundsBtn.addEventListener('click', () => {
+            addFundsModal.style.display = 'none';
+        });
+        
+        closePrivacyBtn.addEventListener('click', () => {
+            privacyModal.style.display = 'none';
+        });
+        
+        closeSecurityBtn.addEventListener('click', () => {
+            securityModal.style.display = 'none';
+        });
+        
+        closeAboutBtn.addEventListener('click', () => {
+            aboutModal.style.display = 'none';
+        });
+        
+        closeQrModalBtn.addEventListener('click', () => {
+            qrModal.style.display = 'none';
+        });
+        
+        closeAboutModalBtn.addEventListener('click', () => {
+            aboutModal.style.display = 'none';
+        });
+        
+        cancelTransferBtn.addEventListener('click', () => {
+            transferModal.style.display = 'none';
+        });
+        
+        cancelReceiveBtn.addEventListener('click', () => {
+            receiveModal.style.display = 'none';
+        });
+        
+        cancelAddFundsBtn.addEventListener('click', () => {
+            addFundsModal.style.display = 'none';
+        });
+        
+        // Confirmar acciones en modales
+        confirmTransferBtn.addEventListener('click', () => {
+            const currency = document.getElementById('transfer-currency').value;
+            const amount = parseFloat(document.getElementById('transfer-amount').value);
+            const phone = document.getElementById('transfer-phone').value;
+            const message = document.getElementById('transfer-message').value;
+            
+            if (isNaN(amount)) {
+                showNotification('Ingresa un monto válido');
+                return;
+            }
+            
+            if (currency === 'BOB' && amount > currentBalanceBOB) {
+                showNotification('Saldo insuficiente en BOB');
+                return;
+            }
+            
+            if (currency === 'USDT' && amount > currentBalanceUSDT) {
+                showNotification('Saldo insuficiente en USDT');
+                return;
+            }
+            
+            if (!phone || phone.length < 8) {
+                showNotification('Ingresa un número de teléfono válido');
+                return;
+            }
+            
+            if (currency === 'BOB') {
+                currentBalanceBOB -= amount;
+            } else {
+                currentBalanceUSDT -= amount;
+            }
+            
+            updateBalanceDisplay();
+            addTransaction(`Transferencia a ${phone}`, -amount, currency, 'transfer-out', 'paper-plane');
+            showNotification(`Transferencia de ${amount.toFixed(2)} ${currency} realizada a ${phone}`);
+            transferModal.style.display = 'none';
+            
+            // Limpiar formulario
+            document.getElementById('transfer-amount').value = '';
+            document.getElementById('transfer-phone').value = '';
+            document.getElementById('transfer-message').value = '';
+        });
+        
+        confirmReceiveBtn.addEventListener('click', () => {
+            const currency = document.getElementById('receive-currency').value;
+            const amount = parseFloat(document.getElementById('receive-amount').value);
+            const message = document.getElementById('receive-message').value;
+            
+            if (isNaN(amount)) {
+                showNotification('Ingresa un monto válido');
+                return;
+            }
+            
+            showNotification(`Solicitud de pago por ${amount.toFixed(2)} ${currency} generada`);
+            receiveModal.style.display = 'none';
+            
+            // Limpiar formulario
+            document.getElementById('receive-amount').value = '';
+            document.getElementById('receive-message').value = '';
+        });
+        
+        confirmAddFundsBtn.addEventListener('click', () => {
+            const currency = document.getElementById('funds-currency').value;
+            const amount = parseFloat(document.getElementById('funds-amount').value);
+            const method = document.getElementById('funds-method').value;
+            
+            if (isNaN(amount)) {
+                showNotification('Ingresa un monto válido');
+                return;
+            }
+            
+            if (currency === 'BOB') {
+                currentBalanceBOB += amount;
+            } else {
+                currentBalanceUSDT += amount;
+            }
+            
+            updateBalanceDisplay();
+            addTransaction(`Recarga de fondos (${method})`, amount, currency, 'funds-add', 'plus-circle');
+            showNotification(`Se agregaron ${amount.toFixed(2)} ${currency} a tu billetera`);
+            addFundsModal.style.display = 'none';
+            
+            // Limpiar formulario
+            document.getElementById('funds-amount').value = '';
+        });
+        
+        savePrivacyBtn.addEventListener('click', () => {
+            showNotification('Configuración de privacidad guardada');
+            privacyModal.style.display = 'none';
+        });
+        
+        saveSecurityBtn.addEventListener('click', () => {
+            showNotification('Configuración de seguridad guardada');
+            securityModal.style.display = 'none';
+        });
+        
+        logoutBtn.addEventListener('click', () => {
+            showNotification('Has cerrado sesión');
+            profileModal.style.display = 'none';
+        });
+        
+        // Navegación
+        navHome.addEventListener('click', () => {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            navHome.classList.add('active');
+            showHomeView();
+        });
+        
+        navWallet.addEventListener('click', () => {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            navWallet.classList.add('active');
+            showWalletView();
+        });
+        
+        navStats.addEventListener('click', () => {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            navStats.classList.add('active');
+            showStatsView();
+        });
+        
+        navSettings.addEventListener('click', () => {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            navSettings.classList.add('active');
+            showSettingsView();
+        });
+        
+        // Cerrar modales haciendo clic fuera del contenido
+        window.addEventListener('click', (e) => {
+            if (e.target === profileModal) {
+                profileModal.style.display = 'none';
+            }
+            if (e.target === transferModal) {
+                transferModal.style.display = 'none';
+            }
+            if (e.target === qrModal) {
+                qrModal.style.display = 'none';
+            }
+            if (e.target === receiveModal) {
+                receiveModal.style.display = 'none';
+            }
+            if (e.target === addFundsModal) {
+                addFundsModal.style.display = 'none';
+            }
+            if (e.target === privacyModal) {
+                privacyModal.style.display = 'none';
+            }
+            if (e.target === securityModal) {
+                securityModal.style.display = 'none';
+            }
+            if (e.target === aboutModal) {
+                aboutModal.style.display = 'none';
+            }
+        });
+        
+        // Inicialización
+        updateBalanceDisplay();
+        renderTransactions();
+    </script>
+</body>
+</html>

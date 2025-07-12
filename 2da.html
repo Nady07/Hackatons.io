@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco Digital Bolivia</title>
+    <style>
+        :root {
+            --primary-blue: #1a365d;
+            --secondary-blue: #2c5282;
+            --light-blue: #ebf8ff;
+            --dark-gray: #2d3748;
+            --medium-gray: #4a5568;
+            --light-gray: #e2e8f0;
+            --accent-green: #38a169;
+            --accent-yellow: #d69e2e;
+            --white: #ffffff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+        }
+        
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            background-color: var(--white);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .user-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .account-status {
+            background-color: var(--accent-green);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #2c5282, #1a365d);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .card::after {
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            right: -30px;
+            width: 200px;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .card-number {
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        
+        .card-holder {
+            text-transform: uppercase;
+        }
+        
+        .card-expiry {
+            text-align: right;
+        }
+        
+        .card-chip {
+            width: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+        }
+        
+        .menu-item {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 15px 5px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .menu-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: var(--primary-blue);
+        }
+        
+        .menu-text {
+            font-size: 12px;
+            color: var(--medium-gray);
+        }
+        
+        .section-title {
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .see-all {
+            font-size: 14px;
+            color: var(--secondary-blue);
+            font-weight: normal;
+        }
+        
+        .transactions {
+            padding: 0 20px;
+        }
+        
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .transaction-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary-blue);
+        }
+        
+        .transaction-details h4 {
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .transaction-details p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            color: var(--medium-gray);
+        }
+        
+        .transaction-amount {
+            text-align: right;
+        }
+        
+        .transaction-amount .amount {
+            font-weight: bold;
+        }
+        
+        .transaction-amount .date {
+            font-size: 12px;
+            color: var(--medium-gray);
+            margin-top: 5px;
+        }
+        
+        .crypto-converter {
+            background-color: var(--light-blue);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .converter-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+        
+        .converter-title i {
+            margin-right: 10px;
+        }
+        
+        .converter-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--medium-gray);
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .convert-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .convert-btn:hover {
+            background-color: var(--secondary-blue);
+        }
+        
+        .tab-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            background-color: var(--white);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .tab {
+            text-align: center;
+            color: var(--medium-gray);
+        }
+        
+        .tab.active {
+            color: var(--primary-blue);
+        }
+        
+        .tab i {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .tab-text {
+            font-size: 12px;
+        }
+        
+        .badge {
+            background-color: var(--accent-yellow);
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="user-info">
+                <div class="user-name">Juan Pérez</div>
+                <div class="account-status">Activo</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <span>Tarjeta Internacional</span>
+                    <span><i class="fas fa-globe"></i></span>
+                </div>
+                <div class="card-number">•••• •••• •••• 4567</div>
+                <div class="card-details">
+                    <div class="card-holder">JUAN PEREZ</div>
+                    <div class="card-expiry">05/25</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="menu">
+            <div class="menu-item">
+                <div class="menu-icon"><i class="fas fa-exchange-alt"></i></div>
+                <div class="menu-text">Transferir</div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-icon"><i class="fas fa-money-bill-wave"></i></div>
+                <div class="menu-text">Pagar</div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-icon"><i class="fas fa-qrcode"></i></div>
+                <div class="menu-text">QR</div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-icon"><i class="fas fa-coins"></i></div>
+                <div class="menu-text">Cripto</div>
+            </div>
+        </div>
+        
+        <div class="crypto-converter">
+            <div class="converter-title">
+                <i class="fas fa-exchange-alt"></i> Convertir a Cripto
+            </div>
+            <form class="converter-form">
+                <div class="form-group">
+                    <label for="amount">Monto en BOB</label>
+                    <input type="number" id="amount" placeholder="Ej. 1000">
+                </div>
+                <div class="form-group">
+                    <label for="from">De</label>
+                    <select id="from">
+                        <option>BOB - Boliviano</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="to">A</label>
+                    <select id="to">
+                        <option>USDT - Tether</option>
+                        <option>BTC - Bitcoin</option>
+                        <option>ETH - Ethereum</option>
+                    </select>
+                </div>
+                <button type="button" class="convert-btn">Convertir</button>
+            </form>
+        </div>
+        
+        <div class="section-title">
+            Mis cuentas
+            <span class="see-all">Ver todas</span>
+        </div>
+        
+        <div class="card" style="background: linear-gradient(135deg, #4a5568, #2d3748); margin: 20px;">
+            <div class="card-title">
+                <span>Cuenta Principal</span>
+                <span><i class="fas fa-wallet"></i></span>
+            </div>
+            <div class="card-number">•••• •••• •••• 8910</div>
+            <div class="card-details">
+                <div class="card-holder">JUAN PEREZ</div>
+                <div class="card-expiry">Saldo: BOB 12,450.50</div>
+            </div>
+        </div>
+        
+        <div class="section-title">
+            Últimas transacciones
+            <span class="see-all">Ver todas</span>
+        </div>
+        
+        <div class="transactions">
+            <div class="transaction">
+                <div class="transaction-info">
+                    <div class="transaction-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <h4>Compra Internacional</h4>
+                        <p>Amazon.com</p>
+                    </div>
+                </div>
+                <div class="transaction-amount">
+                    <div class="amount">- $120.00</div>
+                    <div class="date">15 Ago 10:30 am</div>
+                </div>
+            </div>
+            
+            <div class="transaction">
+                <div class="transaction-info">
+                    <div class="transaction-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <h4>Conversión a USDT</h4>
+                        <p>Cripto</p>
+                    </div>
+                </div>
+                <div class="transaction-amount">
+                    <div class="amount">- BOB 1,000.00</div>
+                    <div class="date">14 Ago 3:45 pm</div>
+                </div>
+            </div>
+            
+            <div class="transaction">
+                <div class="transaction-info">
+                    <div class="transaction-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <h4>Depósito USDT</h4>
+                        <p>Binance</p>
+                    </div>
+                </div>
+                <div class="transaction-amount">
+                    <div class="amount" style="color: var(--accent-green);">+ 142.85 USDT</div>
+                    <div class="date">14 Ago 3:46 pm</div>
+                </div>
+            </div>
+            
+            <div class="transaction">
+                <div class="transaction-info">
+                    <div class="transaction-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <h4>Restaurante</h4>
+                        <p>La Comarca</p>
+                    </div>
+                </div>
+                <div class="transaction-amount">
+                    <div class="amount">- BOB 185.50</div>
+                    <div class="date">13 Ago 8:15 pm</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-bar">
+            <div class="tab active">
+                <i class="fas fa-home"></i>
+                <div class="tab-text">Inicio</div>
+            </div>
+            <div class="tab">
+                <i class="fas fa-credit-card"></i>
+                <div class="tab-text">Tarjetas</div>
+            </div>
+            <div class="tab">
+                <i class="fas fa-chart-line"></i>
+                <div class="tab-text">Inversiones</div>
+            </div>
+            <div class="tab">
+                <i class="fas fa-user"></i>
+                <div class="tab-text">Perfil</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

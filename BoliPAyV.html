@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BolPayV - Billetera Digital</title>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #00CEFF;
+            --success: #00B894;
+            --danger: #D63031;
+            --warning: #FDCB6E;
+            --dark: #2D3436;
+            --light: #F5F6FA;
+            --white: #FFFFFF;
+            --gray: #636E72;
+            --bob-blue: #0038A8;
+            --bob-yellow: #F9D616;
+            --bob-red: #D52B1E;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .app-container {
+            max-width: 420px;
+            margin: 0 auto;
+            background-color: var(--white);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Pantalla de Registro */
+        .register-screen {
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--bob-blue);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--bob-yellow);
+        }
+        
+        .register-form {
+            width: 100%;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: var(--light);
+        }
+        
+        .input-group .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 40px;
+            color: var(--gray);
+        }
+        
+        .register-btn {
+            width: 100%;
+            background-color: var(--bob-blue);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--gray);
+        }
+        
+        .login-link a {
+            color: var(--bob-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        /* Pantalla Principal */
+        .main-screen {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .header {
+            background-color: var(--bob-blue);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .profile {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bob-blue);
+            font-weight: bold;
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, var(--bob-blue), var(--bob-red));
+            color: white;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 56, 168, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .balance-card::after {
+            content: "";
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--bob-yellow);
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+        
+        .balance-title {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .balance-amount {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .balance-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .balance-btn {
+            flex: 1;
+            background-color: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .balance-btn i {
+            margin-right: 5px;
+        }
+        
+        .cards-section {
+            padding: 0 20px;
+            margin-bottom: 15px;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cards-container {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .card {
+            min-width: 200px;
+            height: 120px;
+            background: linear-gradient(45deg, #2D3436, #636E72);
+            border-radius: 12px;
+            padding: 15px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card-bank {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .card-number {
+            font-size: 16px;
+            letter-spacing: 1px;
+            margin: 10px 0;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+        
+        .history-section {
+            flex: 1;
+            padding: 0 20px;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .history-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--bob-blue);
+        }
+        
+        .history-details h4 {
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+        
+        .history-details p {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .history-amount {
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        .history-amount.positive {
+            color: var(--success);
+        }
+        
+        .history-amount.negative {
+            color: var(--danger);
+        }
+        
+        .nav-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            background-color: var(--white);
+            border-top: 1px solid #eee;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            font-size: 12px;
+        }
+        
+        .nav-item.active {
+            color: var(--bob-blue);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        /* Pantalla de Criptomonedas */
+        .crypto-screen {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .crypto-header {
+            padding: 15px 20px;
+            background-color: var(--white);
+            border-bottom: 1px solid #eee;
+        }
+        
+        .crypto-search {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            background-color: var(--light);
+        }
+        
+        .favorites-section {
+            padding: 15px 20px;
+        }
+        
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .favorite-item {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .favorite-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background-color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bob-blue);
+        }
+        
+        .favorite-name {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .favorite-price {
+            font-size: 11px;
+            color: var(--success);
+            margin-top: 3px;
+        }
+        
+        .crypto-list {
+            flex: 1;
+            padding: 0 20px;
+            overflow-y: auto;
+        }
+        
+        .crypto-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .crypto-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .crypto-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .crypto-details h4 {
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+        
+        .crypto-details p {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .crypto-price {
+            text-align: right;
+        }
+        
+        .crypto-price .price {
+            font-weight: bold;
+        }
+        
+        .crypto-price .change {
+            font-size: 12px;
+            color: var(--success);
+        }
+        
+        .crypto-price .change.negative {
+            color: var(--danger);
+        }
+        
+        /* Pantalla de Conversión */
+        .convert-screen {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .convert-header {
+            padding: 15px 20px;
+            background-color: var(--white);
+            border-bottom: 1px solid #eee;
+        }
+        
+        .convert-title {
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .convert-subtitle {
+            text-align: center;
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .convert-form {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+        
+        .convert-card {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .input-group-convert {
+            margin-bottom: 15px;
+        }
+        
+        .input-group-convert label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--dark);
+        }
+        
+        .input-group-convert input, 
+        .input-group-convert select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: var(--light);
+        }
+        
+        .convert-arrow {
+            text-align: center;
+            margin: 10px 0;
+            color: var(--bob-blue);
+            font-size: 20px;
+        }
+        
+        .convert-btn {
+            width: 100%;
+            background-color: var(--bob-blue);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .convert-rate {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .convert-history {
+            padding: 0 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        /* Pantalla de Saldos */
+        .balance-screen {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .balance-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .balance-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            font-weight: 500;
+            color: var(--gray);
+        }
+        
+        .balance-tab.active {
+            color: var(--bob-blue);
+            border-bottom: 2px solid var(--bob-blue);
+        }
+        
+        .balance-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .balance-card-local {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .balance-card-crypto {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .balance-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .balance-item:last-child {
+            border-bottom: none;
+        }
+        
+        .balance-label {
+            font-weight: 500;
+        }
+        
+        .balance-value {
+            font-weight: bold;
+        }
+        
+        .balance-total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        /* Pantalla de Pago QR */
+        .qr-screen {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .qr-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background-color: var(--white);
+            border: 1px solid #eee;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--bob-blue);
+        }
+        
+        .qr-address {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            word-break: break-all;
+            font-family: monospace;
+        }
+        
+        .qr-actions {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .qr-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+        }
+        
+        .qr-btn-primary {
+            background-color: var(--bob-blue);
+            color: white;
+        }
+        
+        .qr-btn-secondary {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        /* Modales */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .close-modal {
+            font-size: 24px;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+        }
+        
+        .modal-btn-primary {
+            background-color: var(--bob-blue);
+            color: white;
+        }
+        
+        .modal-btn-secondary {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        /* Transiciones */
+        .fade-in {
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 360px) {
+            .favorites-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .nav-icon {
+                font-size: 18px;
+            }
+            
+            .nav-item {
+                font-size: 10px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Pantalla de Registro -->
+        <div class="register-screen" id="register-screen">
+            <div class="logo">
+                <i class="fas fa-wallet"></i> BolPayV
+            </div>
+            
+            <div class="register-form">
+                <div class="input-group">
+                    <label for="name">Nombre completo</label>
+                    <input type="text" id="name" placeholder="Ingresa tu nombre">
+                </div>
+                
+                <div class="input-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" placeholder="Ingresa tu correo">
+                </div>
+                
+                <div class="input-group">
+                    <label for="phone">Teléfono</label>
+                    <input type="tel" id="phone" placeholder="Ingresa tu teléfono">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" placeholder="Crea una contraseña">
+                    <i class="fas fa-eye input-icon" id="toggle-password"></i>
+                </div>
+                
+                <button class="register-btn" id="register-btn">Registrarse</button>
+                
+                <div class="login-link">
+                    ¿Ya tienes una cuenta? <a href="#" id="login-link">Inicia sesión</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pantalla Principal (Moneda Nacional) -->
+        <div class="main-screen" id="main-screen">
+            <div class="header">
+                <div class="header-title">Mi Billetera</div>
+                <div class="profile">JP</div>
+            </div>
+            
+            <div class="balance-card">
+                <div class="balance-title">Saldo disponible</div>
+                <div class="balance-amount">Bs. 5,250.80</div>
+                <div class="balance-actions">
+                    <button class="balance-btn">
+                        <i class="fas fa-plus"></i> Recargar
+                    </button>
+                    <button class="balance-btn">
+                        <i class="fas fa-exchange-alt"></i> Transferir
+                    </button>
+                    <button class="balance-btn">
+                        <i class="fas fa-qrcode"></i> Pagar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="cards-section">
+                <div class="section-title">
+                    Mis Tarjetas
+                    <span style="font-size: 12px; color: var(--bob-blue);">Ver todas</span>
+                </div>
+                
+                <div class="cards-container">
+                    <div class="card">
+                        <div class="card-bank">Banco BBVA</div>
+                        <div class="card-number">•••• •••• •••• 4567</div>
+                        <div class="card-footer">
+                            <span>Juan Pérez</span>
+                            <span>09/25</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-bank">Banco BCP</div>
+                        <div class="card-number">•••• •••• •••• 8910</div>
+                        <div class="card-footer">
+                            <span>Juan Pérez</span>
+                            <span>03/24</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-section">
+                <div class="section-title">Historial de transacciones</div>
+                
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>Supermercado</h4>
+                            <p>Ayer, 15:30</p>
+                        </div>
+                    </div>
+                    <div class="history-amount negative">- Bs. 120.50</div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>Depósito</h4>
+                            <p>Ayer, 10:15</p>
+                        </div>
+                    </div>
+                    <div class="history-amount positive">+ Bs. 1,000.00</div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>Restaurante</h4>
+                            <p>20/05, 19:45</p>
+                        </div>
+                    </div>
+                    <div class="history-amount negative">- Bs. 85.30</div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>Transferencia</h4>
+                            <p>19/05, 14:20</p>
+                        </div>
+                    </div>
+                    <div class="history-amount positive">+ Bs. 500.00</div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-icon">
+                            <i class="fas fa-gas-pump"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>Gasolina</h4>
+                            <p>18/05, 08:10</p>
+                        </div>
+                    </div>
+                    <div class="history-amount negative">- Bs. 45.00</div>
+                </div>
+            </div>
+            
+            <nav class="nav-bar">
+                <div class="nav-item active" id="nav-home">
+                    <div class="nav-icon"><i class="fas fa-home"></i></div>
+                    <div>Inicio</div>
+                </div>
+                <div class="nav-item" id="nav-crypto">
+                    <div class="nav-icon"><i class="fas fa-coins"></i></div>
+                    <div>Cripto</div>
+                </div>
+                <div class="nav-item" id="nav-convert">
+                    <div class="nav-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div>Convertir</div>
+                </div>
+                <div class="nav-item" id="nav-balance">
+                    <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+                    <div>Saldos</div>
+                </div>
+                <div class="nav-item" id="nav-qr">
+                    <div class="nav-icon"><i class="fas fa-qrcode"></i></div>
+                    <div>QR</div>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Pantalla de Criptomonedas -->
+        <div class="crypto-screen" id="crypto-screen">
+            <div class="crypto-header">
+                <input type="text" class="crypto-search" placeholder="Buscar criptomonedas...">
+            </div>
+            
+            <div class="favorites-section">
+                <div class="section-title">Mis favoritas</div>
+                
+                <div class="favorites-grid">
+                    <div class="favorite-item">
+                        <div class="favorite-icon">
+                            <i class="fab fa-bitcoin"></i>
+                        </div>
+                        <div class="favorite-name">BTC</div>
+                        <div class="favorite-price">+2.5%</div>
+                    </div>
+                    
+                    <div class="favorite-item">
+                        <div class="favorite-icon">
+                            <i class="fab fa-ethereum"></i>
+                        </div>
+                        <div class="favorite-name">ETH</div>
+                        <div class="favorite-price">+1.8%</div>
+                    </div>
+                    
+                    <div class="favorite-item">
+                        <div class="favorite-icon" style="color: #00CEFF;">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="favorite-name">USDT</div>
+                        <div class="favorite-price">+0.1%</div>
+                    </div>
+                    
+                    <div class="favorite-item">
+                        <div class="favorite-icon" style="color: #FDCB6E;">
+                            <i class="fab fa-btc"></i>
+                        </div>
+                        <div class="favorite-name">BNB</div>
+                        <div class="favorite-price">+3.2%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="crypto-list">
+                <div class="section-title">Todas las criptomonedas</div>
+                
+                <div class="crypto-item">
+                    <div class="crypto-info">
+                        <div class="crypto-icon">
+                            <i class="fab fa-bitcoin"></i>
+                        </div>
+                        <div class="crypto-details">
+                            <h4>Bitcoin</h4>
+                            <p>BTC</p>
+                        </div>
+                    </div>
+                    <div class="crypto-price">
+                        <div class="price">$42,850.20</div>
+                        <div class="change">+2.5%</div>
+                    </div>
+                </div>
+                
+                <div class="crypto-item">
+                    <div class="crypto-info">
+                        <div class="crypto-icon">
+                            <i class="fab fa-ethereum"></i>
+                        </div>
+                        <div class="crypto-details">
+                            <h4>Ethereum</h4>
+                            <p>ETH</p>
+                        </div>
+                    </div>
+                    <div class="crypto-price">
+                        <div class="price">$2,350.75</div>
+                        <div class="change">+1.8%</div>
+                    </div>
+                </div>
+                
+                <div class="crypto-item">
+                    <div class="crypto-info">
+                        <div class="crypto-icon" style="color: #00CEFF;">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="crypto-details">
+                            <h4>Tether</h4>
+                            <p>USDT</p>
+                        </div>
+                    </div>
+                    <div class="crypto-price">
+                        <div class="price">$1.00</div>
+                        <div class="change">+0.1%</div>
+                    </div>
+                </div>
+                
+                <div class="crypto-item">
+                    <div class="crypto-info">
+                        <div class="crypto-icon" style="color: #FDCB6E;">
+                            <i class="fab fa-btc"></i>
+                        </div>
+                        <div class="crypto-details">
+                            <h4>Binance Coin</h4>
+                            <p>BNB</p>
+                        </div>
+                    </div>
+                    <div class="crypto-price">
+                        <div class="price">$305.40</div>
+                        <div class="change">+3.2%</div>
+                    </div>
+                </div>
+                
+                <div class="crypto-item">
+                    <div class="crypto-info">
+                        <div class="crypto-icon" style="color: #D63031;">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="crypto-details">
+                            <h4>Ripple</h4>
+                            <p>XRP</p>
+                        </div>
+                    </div>
+                    <div class="crypto-price">
+                        <div class="price">$0.52</div>
+                        <div class="change negative">-0.5%</div>
+                    </div>
+                </div>
+                
+                <div class="crypto-item">
+                    <div class="crypto-info">
+                        <div class="crypto-icon" style="color: #6C5CE7;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="crypto-details">
+                            <h4>Cardano</h4>
+                            <p>ADA</p>
+                        </div>
+                    </div>
+                    <div class="crypto-price">
+                        <div class="price">$0.38</div>
+                        <div class="change">+1.2%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="nav-bar">
+                <div class="nav-item" id="nav-crypto-home">
+                    <div class="nav-icon"><i class="fas fa-home"></i></div>
+                    <div>Inicio</div>
+                </div>
+                <div class="nav-item active" id="nav-crypto-crypto">
+                    <div class="nav-icon"><i class="fas fa-coins"></i></div>
+                    <div>Cripto</div>
+                </div>
+                <div class="nav-item" id="nav-crypto-convert">
+                    <div class="nav-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div>Convertir</div>
+                </div>
+                <div class="nav-item" id="nav-crypto-balance">
+                    <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+                    <div>Saldos</div>
+                </div>
+                <div class="nav-item" id="nav-crypto-qr">
+                    <div class="nav-icon"><i class="fas fa-qrcode"></i></div>
+                    <div>QR</div>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Pantalla de Conversión -->
+        <div class="convert-screen" id="convert-screen">
+            <div class="convert-header">
+                <div class="convert-title">Conversión de Moneda</div>
+                <div class="convert-subtitle">Convierte entre Bs. y criptomonedas al mejor precio</div>
+            </div>
+            
+            <div class="convert-form">
+                <div class="convert-card">
+                    <div class="input-group-convert">
+                        <label for="convert-from">De</label>
+                        <select id="convert-from">
+                            <option value="BOB">Bolivianos (Bs.)</option>
+                            <option value="BTC">Bitcoin (BTC)</option>
+                            <option value="ETH">Ethereum (ETH)</option>
+                            <option value="USDT">Tether (USDT)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="convert-arrow">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    
+                    <div class="input-group-convert">
+                        <label for="convert-to">A</label>
+                        <select id="convert-to">
+                            <option value="BTC">Bitcoin (BTC)</option>
+                            <option value="ETH">Ethereum (ETH)</option>
+                            <option value="USDT">Tether (USDT)</option>
+                            <option value="BOB">Bolivianos (Bs.)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group-convert">
+                        <label for="convert-amount">Monto</label>
+                        <input type="number" id="convert-amount" placeholder="Ingresa el monto">
+                    </div>
+                    
+                    <button class="convert-btn" id="convert-btn">
+                        <i class="fas fa-exchange-alt"></i> Convertir
+                    </button>
+                    
+                    <div class="convert-rate">
+                        Tasa actual: 1 BTC = Bs. 280,000.00
+                    </div>
+                </div>
+            </div>
+            
+            <div class="convert-history">
+                <div class="section-title">Historial de conversiones</div>
+                
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>BOB a BTC</h4>
+                            <p>Ayer, 14:30</p>
+                        </div>
+                    </div>
+                    <div class="history-amount">
+                        Bs. 1,400.00 → 0.0005 BTC
+                    </div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>USDT a BOB</h4>
+                            <p>20/05, 10:15</p>
+                        </div>
+                    </div>
+                    <div class="history-amount">
+                        100 USDT → Bs. 690.00
+                    </div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="history-details">
+                            <h4>ETH a BOB</h4>
+                            <p>18/05, 16:45</p>
+                        </div>
+                    </div>
+                    <div class="history-amount">
+                        0.5 ETH → Bs. 5,250.00
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="nav-bar">
+                <div class="nav-item" id="nav-convert-home">
+                    <div class="nav-icon"><i class="fas fa-home"></i></div>
+                    <div>Inicio</div>
+                </div>
+                <div class="nav-item" id="nav-convert-crypto">
+                    <div class="nav-icon"><i class="fas fa-coins"></i></div>
+                    <div>Cripto</div>
+                </div>
+                <div class="nav-item active" id="nav-convert-convert">
+                    <div class="nav-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div>Convertir</div>
+                </div>
+                <div class="nav-item" id="nav-convert-balance">
+                    <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+                    <div>Saldos</div>
+                </div>
+                <div class="nav-item" id="nav-convert-qr">
+                    <div class="nav-icon"><i class="fas fa-qrcode"></i></div>
+                    <div>QR</div>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Pantalla de Saldos -->
+        <div class="balance-screen" id="balance-screen">
+            <div class="balance-tabs">
+                <div class="balance-tab active" id="tab-local">Moneda Local</div>
+                <div class="balance-tab" id="tab-crypto">Criptomonedas</div>
+            </div>
+            
+            <div class="balance-content">
+                <div id="local-balance">
+                    <div class="balance-card-local">
+                        <div class="balance-item">
+                            <span class="balance-label">Saldo disponible</span>
+                            <span class="balance-value">Bs. 5,250.80</span>
+                        </div>
+                        
+                        <div class="balance-item">
+                            <span class="balance-label">Ahorros BBVA</span>
+                            <span class="balance-value">Bs. 12,500.00</span>
+                        </div>
+                        
+                        <div class="balance-item">
+                            <span class="balance-label">Ahorros BCP</span>
+                            <span class="balance-value">Bs. 8,300.50</span>
+                        </div>
+                        
+                        <div class="balance-item">
+                            <span class="balance-label">Inversiones</span>
+                            <span class="balance-value">Bs. 15,000.00</span>
+                        </div>
+                        
+                        <div class="balance-total">
+                            <span>Total:</span>
+                            <span>Bs. 41,051.30</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="crypto-balance" style="display: none;">
+                    <div class="balance-card-crypto">
+                        <div class="balance-item">
+                            <span class="balance-label">Bitcoin (BTC)</span>
+                            <span class="balance-value">0.025 BTC</span>
+                        </div>
+                        
+                        <div class="balance-item">
+                            <span class="balance-label">Ethereum (ETH)</span>
+                            <span class="balance-value">1.5 ETH</span>
+                        </div>
+                        
+                        <div class="balance-item">
+                            <span class="balance-label">Tether (USDT)</span>
+                            <span class="balance-value">350.25 USDT</span>
+                        </div>
+                        
+                        <div class="balance-item">
+                            <span class="balance-label">Binance Coin (BNB)</span>
+                            <span class="balance-value">2.8 BNB</span>
+                        </div>
+                        
+                        <div class="balance-total">
+                            <span>Total en bolivianos:</span>
+                            <span>Bs. 26,842.50</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="nav-bar">
+                <div class="nav-item" id="nav-balance-home">
+                    <div class="nav-icon"><i class="fas fa-home"></i></div>
+                    <div>Inicio</div>
+                </div>
+                <div class="nav-item" id="nav-balance-crypto">
+                    <div class="nav-icon"><i class="fas fa-coins"></i></div>
+                    <div>Cripto</div>
+                </div>
+                <div class="nav-item" id="nav-balance-convert">
+                    <div class="nav-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div>Convertir</div>
+                </div>
+                <div class="nav-item active" id="nav-balance-balance">
+                    <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+                    <div>Saldos</div>
+                </div>
+                <div class="nav-item" id="nav-balance-qr">
+                    <div class="nav-icon"><i class="fas fa-qrcode"></i></div>
+                    <div>QR</div>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Pantalla de Pago QR -->
+        <div class="qr-screen" id="qr-screen">
+            <div class="qr-title">Pago con QR</div>
+            
+            <div class="qr-code">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            
+            <div class="qr-address">
+                boliviapay://payment/juanperez123
+            </div>
+            
+            <div class="qr-actions">
+                <button class="qr-btn qr-btn-primary">
+                    <i class="fas fa-download"></i> Guardar
+                </button>
+                <button class="qr-btn qr-btn-secondary">
+                    <i class="fas fa-share-alt"></i> Compartir
+                </button>
+            </div>
+            
+            <nav class="nav-bar" style="position: fixed; bottom: 0; width: 100%;">
+                <div class="nav-item" id="nav-qr-home">
+                    <div class="nav-icon"><i class="fas fa-home"></i></div>
+                    <div>Inicio</div>
+                </div>
+                <div class="nav-item" id="nav-qr-crypto">
+                    <div class="nav-icon"><i class="fas fa-coins"></i></div>
+                    <div>Cripto</div>
+                </div>
+                <div class="nav-item" id="nav-qr-convert">
+                    <div class="nav-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div>Convertir</div>
+                </div>
+                <div class="nav-item" id="nav-qr-balance">
+                    <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+                    <div>Saldos</div>
+                </div>
+                <div class="nav-item active" id="nav-qr-qr">
+                    <div class="nav-icon"><i class="fas fa-qrcode"></i></div>
+                    <div>QR</div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Modal de Compra de Cripto -->
+    <div class="modal" id="buy-crypto-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Comprar Criptomoneda</div>
+                <div class="close-modal" id="close-buy-crypto">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="input-group-convert">
+                    <label for="crypto-amount">Monto a comprar</label>
+                    <input type="number" id="crypto-amount" placeholder="Ej: 100">
+                </div>
+                
+                <div class="input-group-convert">
+                    <label for="crypto-currency">Criptomoneda</label>
+                    <select id="crypto-currency">
+                        <option value="BTC">Bitcoin (BTC)</option>
+                        <option value="ETH">Ethereum (ETH)</option>
+                        <option value="USDT">Tether (USDT)</option>
+                        <option value="BNB">Binance Coin (BNB)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group-convert">
+                    <label for="payment-method">Método de pago</label>
+                    <select id="payment-method">
+                        <option value="card">Tarjeta de crédito/débito</option>
+                        <option value="transfer">Transferencia bancaria</option>
+                        <option value="balance">Saldo disponible</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="cancel-buy-crypto">Cancelar</button>
+                <button class="modal-btn modal-btn-primary" id="confirm-buy-crypto">Comprar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Conexión con Binance -->
+    <div class="modal" id="connect-binance-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Conectar con Binance</div>
+                <div class="close-modal" id="close-connect-binance">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="input-group-convert">
+                    <label for="binance-api">API Key</label>
+                    <input type="text" id="binance-api" placeholder="Ingresa tu API Key">
+                </div>
+                
+                <div class="input-group-convert">
+                    <label for="binance-secret">Secret Key</label>
+                    <input type="password" id="binance-secret" placeholder="Ingresa tu Secret Key">
+                </div>
+                
+                <p style="font-size: 12px; color: var(--gray); margin-top: 15px;">
+                    Al conectar tu cuenta de Binance, podrás operar directamente desde BoliviaPay.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="cancel-connect-binance">Cancelar</button>
+                <button class="modal-btn modal-btn-primary" id="confirm-connect-binance">Conectar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Conversión Exitosa -->
+    <div class="modal" id="convert-success-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Conversión Exitosa</div>
+                <div class="close-modal" id="close-convert-success">&times;</div>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <i class="fas fa-check-circle" style="font-size: 50px; color: var(--success); margin-bottom: 20px;"></i>
+                <p>¡Tu conversión se ha completado con éxito!</p>
+                <p id="convert-result" style="font-weight: bold; margin: 15px 0;"></p>
+                <p>Los fondos han sido transferidos a tu cuenta.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" id="close-convert-success-btn">Aceptar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Elementos del DOM
+        const registerScreen = document.getElementById('register-screen');
+        const mainScreen = document.getElementById('main-screen');
+        const cryptoScreen = document.getElementById('crypto-screen');
+        const convertScreen = document.getElementById('convert-screen');
+        const balanceScreen = document.getElementById('balance-screen');
+        const qrScreen = document.getElementById('qr-screen');
+        
+        const registerBtn = document.getElementById('register-btn');
+        const loginLink = document.getElementById('login-link');
+        const togglePassword = document.getElementById('toggle-password');
+        const convertBtn = document.getElementById('convert-btn');
+        
+        // Navegación principal
+        const navHome = document.getElementById('nav-home');
+        const navCrypto = document.getElementById('nav-crypto');
+        const navConvert = document.getElementById('nav-convert');
+        const navBalance = document.getElementById('nav-balance');
+        const navQr = document.getElementById('nav-qr');
+        
+        // Navegación desde crypto
+        const navCryptoHome = document.getElementById('nav-crypto-home');
+        const navCryptoCrypto = document.getElementById('nav-crypto-crypto');
+        const navCryptoConvert = document.getElementById('nav-crypto-convert');
+        const navCryptoBalance = document.getElementById('nav-crypto-balance');
+        const navCryptoQr = document.getElementById('nav-crypto-qr');
+        
+        // Navegación desde convert
+        const navConvertHome = document.getElementById('nav-convert-home');
+        const navConvertCrypto = document.getElementById('nav-convert-crypto');
+        const navConvertConvert = document.getElementById('nav-convert-convert');
+        const navConvertBalance = document.getElementById('nav-convert-balance');
+        const navConvertQr = document.getElementById('nav-convert-qr');
+        
+        // Navegación desde balance
+        const navBalanceHome = document.getElementById('nav-balance-home');
+        const navBalanceCrypto = document.getElementById('nav-balance-crypto');
+        const navBalanceConvert = document.getElementById('nav-balance-convert');
+        const navBalanceBalance = document.getElementById('nav-balance-balance');
+        const navBalanceQr = document.getElementById('nav-balance-qr');
+        
+        // Navegación desde QR
+        const navQrHome = document.getElementById('nav-qr-home');
+        const navQrCrypto = document.getElementById('nav-qr-crypto');
+        const navQrConvert = document.getElementById('nav-qr-convert');
+        const navQrBalance = document.getElementById('nav-qr-balance');
+        const navQrQr = document.getElementById('nav-qr-qr');
+        
+        // Tabs de saldos
+        const tabLocal = document.getElementById('tab-local');
+        const tabCrypto = document.getElementById('tab-crypto');
+        const localBalance = document.getElementById('local-balance');
+        const cryptoBalance = document.getElementById('crypto-balance');
+        
+        // Formulario de conversión
+        const convertFrom = document.getElementById('convert-from');
+        const convertTo = document.getElementById('convert-to');
+        const convertAmount = document.getElementById('convert-amount');
+        
+        // Modales
+        const buyCryptoModal = document.getElementById('buy-crypto-modal');
+        const connectBinanceModal = document.getElementById('connect-binance-modal');
+        const convertSuccessModal = document.getElementById('convert-success-modal');
+        const convertResult = document.getElementById('convert-result');
+        
+        // Tasas de conversión (simuladas)
+        const exchangeRates = {
+            BTC: 280000, // 1 BTC = 280,000 Bs.
+            ETH: 17500,  // 1 ETH = 17,500 Bs.
+            USDT: 6.9    // 1 USDT = 6.9 Bs.
+        };
+        
+        // Funciones para cambiar pantallas
+        function showRegisterScreen() {
+            registerScreen.style.display = 'flex';
+            mainScreen.style.display = 'none';
+            cryptoScreen.style.display = 'none';
+            convertScreen.style.display = 'none';
+            balanceScreen.style.display = 'none';
+            qrScreen.style.display = 'none';
+        }
+        
+        function showMainScreen() {
+            registerScreen.style.display = 'none';
+            mainScreen.style.display = 'flex';
+            cryptoScreen.style.display = 'none';
+            convertScreen.style.display = 'none';
+            balanceScreen.style.display = 'none';
+            qrScreen.style.display = 'none';
+            
+            // Actualizar navegación
+            navHome.classList.add('active');
+            navCrypto.classList.remove('active');
+            navConvert.classList.remove('active');
+            navBalance.classList.remove('active');
+            navQr.classList.remove('active');
+        }
+        
+        function showCryptoScreen() {
+            registerScreen.style.display = 'none';
+            mainScreen.style.display = 'none';
+            cryptoScreen.style.display = 'flex';
+            convertScreen.style.display = 'none';
+            balanceScreen.style.display = 'none';
+            qrScreen.style.display = 'none';
+            
+            // Actualizar navegación
+            navHome.classList.remove('active');
+            navCrypto.classList.add('active');
+            navConvert.classList.remove('active');
+            navBalance.classList.remove('active');
+            navQr.classList.remove('active');
+            
+            navCryptoHome.classList.remove('active');
+            navCryptoCrypto.classList.add('active');
+            navCryptoConvert.classList.remove('active');
+            navCryptoBalance.classList.remove('active');
+            navCryptoQr.classList.remove('active');
+        }
+        
+        function showConvertScreen() {
+            registerScreen.style.display = 'none';
+            mainScreen.style.display = 'none';
+            cryptoScreen.style.display = 'none';
+            convertScreen.style.display = 'flex';
+            balanceScreen.style.display = 'none';
+            qrScreen.style.display = 'none';
+            
+            // Actualizar navegación
+            navHome.classList.remove('active');
+            navCrypto.classList.remove('active');
+            navConvert.classList.add('active');
+            navBalance.classList.remove('active');
+            navQr.classList.remove('active');
+            
+            navConvertHome.classList.remove('active');
+            navConvertCrypto.classList.remove('active');
+            navConvertConvert.classList.add('active');
+            navConvertBalance.classList.remove('active');
+            navConvertQr.classList.remove('active');
+        }
+        
+        function showBalanceScreen() {
+            registerScreen.style.display = 'none';
+            mainScreen.style.display = 'none';
+            cryptoScreen.style.display = 'none';
+            convertScreen.style.display = 'none';
+            balanceScreen.style.display = 'flex';
+            qrScreen.style.display = 'none';
+            
+            // Actualizar navegación
+            navHome.classList.remove('active');
+            navCrypto.classList.remove('active');
+            navConvert.classList.remove('active');
+            navBalance.classList.add('active');
+            navQr.classList.remove('active');
+            
+            navBalanceHome.classList.remove('active');
+            navBalanceCrypto.classList.remove('active');
+            navBalanceConvert.classList.remove('active');
+            navBalanceBalance.classList.add('active');
+            navBalanceQr.classList.remove('active');
+        }
+        
+        function showQrScreen() {
+            registerScreen.style.display = 'none';
+            mainScreen.style.display = 'none';
+            cryptoScreen.style.display = 'none';
+            convertScreen.style.display = 'none';
+            balanceScreen.style.display = 'none';
+            qrScreen.style.display = 'flex';
+            
+            // Actualizar navegación
+            navHome.classList.remove('active');
+            navCrypto.classList.remove('active');
+            navConvert.classList.remove('active');
+            navBalance.classList.remove('active');
+            navQr.classList.add('active');
+            
+            navQrHome.classList.remove('active');
+            navQrCrypto.classList.remove('active');
+            navQrConvert.classList.remove('active');
+            navQrBalance.classList.remove('active');
+            navQrQr.classList.add('active');
+        }
+        
+        // Función para actualizar las opciones de conversión
+        function updateConvertOptions() {
+            const fromValue = convertFrom.value;
+            const toSelect = convertTo;
+            
+            // Limpiar opciones
+            toSelect.innerHTML = '';
+            
+            // Agregar opciones según la selección "De"
+            if (fromValue === 'BOB') {
+                // Si convierte de BOB a cripto
+                toSelect.add(new Option('Bitcoin (BTC)', 'BTC'));
+                toSelect.add(new Option('Ethereum (ETH)', 'ETH'));
+                toSelect.add(new Option('Tether (USDT)', 'USDT'));
+            } else {
+                // Si convierte de cripto a BOB u otra cripto
+                toSelect.add(new Option('Bolivianos (Bs.)', 'BOB'));
+                
+                // Agregar otras criptomonedas excepto la seleccionada
+                if (fromValue !== 'BTC') toSelect.add(new Option('Bitcoin (BTC)', 'BTC'));
+                if (fromValue !== 'ETH') toSelect.add(new Option('Ethereum (ETH)', 'ETH'));
+                if (fromValue !== 'USDT') toSelect.add(new Option('Tether (USDT)', 'USDT'));
+            }
+            
+            // Actualizar la tasa de cambio mostrada
+            updateExchangeRate();
+        }
+        
+        // Función para actualizar la tasa de cambio mostrada
+        function updateExchangeRate() {
+            const fromValue = convertFrom.value;
+            const toValue = convertTo.value;
+            
+            if (fromValue === 'BOB' && toValue === 'BTC') {
+                document.querySelector('.convert-rate').textContent = `Tasa actual: 1 BTC = Bs. ${exchangeRates.BTC.toLocaleString()}`;
+            } else if (fromValue === 'BTC' && toValue === 'BOB') {
+                document.querySelector('.convert-rate').textContent = `Tasa actual: 1 BTC = Bs. ${exchangeRates.BTC.toLocaleString()}`;
+            } else if (fromValue === 'BOB' && toValue === 'ETH') {
+                document.querySelector('.convert-rate').textContent = `Tasa actual: 1 ETH = Bs. ${exchangeRates.ETH.toLocaleString()}`;
+            } else if (fromValue === 'ETH' && toValue === 'BOB') {
+                document.querySelector('.convert-rate').textContent = `Tasa actual: 1 ETH = Bs. ${exchangeRates.ETH.toLocaleString()}`;
+            } else if (fromValue === 'BOB' && toValue === 'USDT') {
+                document.querySelector('.convert-rate').textContent = `Tasa actual: 1 USDT = Bs. ${exchangeRates.USDT.toFixed(2)}`;
+            } else if (fromValue === 'USDT' && toValue === 'BOB') {
+                document.querySelector('.convert-rate').textContent = `Tasa actual: 1 USDT = Bs. ${exchangeRates.USDT.toFixed(2)}`;
+            } else {
+                // Conversión entre criptomonedas
+                const fromRate = fromValue === 'BTC' ? exchangeRates.BTC : 
+                                fromValue === 'ETH' ? exchangeRates.ETH : exchangeRates.USDT;
+                const toRate = toValue === 'BTC' ? exchangeRates.BTC : 
+                              toValue === 'ETH' ? exchangeRates.ETH : exchangeRates.USDT;
+                const rate = fromRate / toRate;
+                document.querySelector('.convert-rate').textContent = `Tasa actual: 1 ${fromValue} = ${rate.toFixed(6)} ${toValue}`;
+            }
+        }
+        
+        // Función para realizar la conversión
+        function performConversion() {
+            const amount = parseFloat(convertAmount.value);
+            const fromValue = convertFrom.value;
+            const toValue = convertTo.value;
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('Ingresa un monto válido');
+                return;
+            }
+            
+            let resultAmount = 0;
+            let resultText = '';
+            
+            if (fromValue === 'BOB') {
+                // Conversión de BOB a cripto
+                if (toValue === 'BTC') {
+                    resultAmount = amount / exchangeRates.BTC;
+                    resultText = `Bs. ${amount.toFixed(2)} → ${resultAmount.toFixed(6)} BTC`;
+                } else if (toValue === 'ETH') {
+                    resultAmount = amount / exchangeRates.ETH;
+                    resultText = `Bs. ${amount.toFixed(2)} → ${resultAmount.toFixed(6)} ETH`;
+                } else if (toValue === 'USDT') {
+                    resultAmount = amount / exchangeRates.USDT;
+                    resultText = `Bs. ${amount.toFixed(2)} → ${resultAmount.toFixed(2)} USDT`;
+                }
+            } else if (toValue === 'BOB') {
+                // Conversión de cripto a BOB
+                if (fromValue === 'BTC') {
+                    resultAmount = amount * exchangeRates.BTC;
+                    resultText = `${amount.toFixed(6)} BTC → Bs. ${resultAmount.toFixed(2)}`;
+                } else if (fromValue === 'ETH') {
+                    resultAmount = amount * exchangeRates.ETH;
+                    resultText = `${amount.toFixed(6)} ETH → Bs. ${resultAmount.toFixed(2)}`;
+                } else if (fromValue === 'USDT') {
+                    resultAmount = amount * exchangeRates.USDT;
+                    resultText = `${amount.toFixed(2)} USDT → Bs. ${resultAmount.toFixed(2)}`;
+                }
+            } else {
+                // Conversión entre criptomonedas
+                const fromRate = fromValue === 'BTC' ? exchangeRates.BTC : 
+                                fromValue === 'ETH' ? exchangeRates.ETH : exchangeRates.USDT;
+                const toRate = toValue === 'BTC' ? exchangeRates.BTC : 
+                              toValue === 'ETH' ? exchangeRates.ETH : exchangeRates.USDT;
+                resultAmount = (amount * fromRate) / toRate;
+                resultText = `${amount.toFixed(6)} ${fromValue} → ${resultAmount.toFixed(6)} ${toValue}`;
+            }
+            
+            // Mostrar resultado en modal
+            convertResult.textContent = resultText;
+            convertSuccessModal.style.display = 'flex';
+        }
+        
+        // Event Listeners
+        registerBtn.addEventListener('click', () => {
+            // Validar formulario de registro aquí
+            showMainScreen();
+        });
+        
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Aquí iría la lógica para mostrar pantalla de login
+            // Por ahora simulamos registro exitoso
+            showMainScreen();
+        });
+        
+        togglePassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePassword.className = 'fas fa-eye-slash input-icon';
+            } else {
+                passwordInput.type = 'password';
+                togglePassword.className = 'fas fa-eye input-icon';
+            }
+        });
+        
+        // Navegación principal
+        navHome.addEventListener('click', showMainScreen);
+        navCrypto.addEventListener('click', showCryptoScreen);
+        navConvert.addEventListener('click', showConvertScreen);
+        navBalance.addEventListener('click', showBalanceScreen);
+        navQr.addEventListener('click', showQrScreen);
+        
+        // Navegación desde crypto
+        navCryptoHome.addEventListener('click', showMainScreen);
+        navCryptoCrypto.addEventListener('click', showCryptoScreen);
+        navCryptoConvert.addEventListener('click', showConvertScreen);
+        navCryptoBalance.addEventListener('click', showBalanceScreen);
+        navCryptoQr.addEventListener('click', showQrScreen);
+        
+        // Navegación desde convert
+        navConvertHome.addEventListener('click', showMainScreen);
+        navConvertCrypto.addEventListener('click', showCryptoScreen);
+        navConvertConvert.addEventListener('click', showConvertScreen);
+        navConvertBalance.addEventListener('click', showBalanceScreen);
+        navConvertQr.addEventListener('click', showQrScreen);
+        
+        // Navegación desde balance
+        navBalanceHome.addEventListener('click', showMainScreen);
+        navBalanceCrypto.addEventListener('click', showCryptoScreen);
+        navBalanceConvert.addEventListener('click', showConvertScreen);
+        navBalanceBalance.addEventListener('click', showBalanceScreen);
+        navBalanceQr.addEventListener('click', showQrScreen);
+        
+        // Navegación desde QR
+        navQrHome.addEventListener('click', showMainScreen);
+        navQrCrypto.addEventListener('click', showCryptoScreen);
+        navQrConvert.addEventListener('click', showConvertScreen);
+        navQrBalance.addEventListener('click', showBalanceScreen);
+        navQrQr.addEventListener('click', showQrScreen);
+        
+        // Tabs de saldos
+        tabLocal.addEventListener('click', () => {
+            tabLocal.classList.add('active');
+            tabCrypto.classList.remove('active');
+            localBalance.style.display = 'block';
+            cryptoBalance.style.display = 'none';
+        });
+        
+        tabCrypto.addEventListener('click', () => {
+            tabCrypto.classList.add('active');
+            tabLocal.classList.remove('active');
+            cryptoBalance.style.display = 'block';
+            localBalance.style.display = 'none';
+        });
+        
+        // Conversión de moneda
+        convertFrom.addEventListener('change', updateConvertOptions);
+        convertTo.addEventListener('change', updateExchangeRate);
+        convertBtn.addEventListener('click', performConversion);
+        
+        // Modales de cripto
+        document.querySelectorAll('.favorite-item, .crypto-item').forEach(item => {
+            item.addEventListener('click', () => {
+                buyCryptoModal.style.display = 'flex';
+            });
+        });
+        
+        document.getElementById('confirm-buy-crypto').addEventListener('click', () => {
+            buyCryptoModal.style.display = 'none';
+            alert('Compra realizada con éxito');
+        });
+        
+        document.getElementById('cancel-buy-crypto').addEventListener('click', () => {
+            buyCryptoModal.style.display = 'none';
+        });
+        
+        document.getElementById('close-buy-crypto').addEventListener('click', () => {
+            buyCryptoModal.style.display = 'none';
+        });
+        
+        // Modal de Binance (simulamos que aparece al hacer clic en algún lugar)
+        setTimeout(() => {
+            // connectBinanceModal.style.display = 'flex';
+        }, 2000);
+        
+        document.getElementById('confirm-connect-binance').addEventListener('click', () => {
+            connectBinanceModal.style.display = 'none';
+            alert('Cuenta de Binance conectada con éxito');
+        });
+        
+        document.getElementById('cancel-connect-binance').addEventListener('click', () => {
+            connectBinanceModal.style.display = 'none';
+        });
+        
+        document.getElementById('close-connect-binance').addEventListener('click', () => {
+            connectBinanceModal.style.display = 'none';
+        });
+        
+        // Modal de conversión exitosa
+        document.getElementById('close-convert-success').addEventListener('click', () => {
+            convertSuccessModal.style.display = 'none';
+        });
+        
+        document.getElementById('close-convert-success-btn').addEventListener('click', () => {
+            convertSuccessModal.style.display = 'none';
+        });
+        
+        // Cerrar modales haciendo clic fuera
+        window.addEventListener('click', (e) => {
+            if (e.target === buyCryptoModal) {
+                buyCryptoModal.style.display = 'none';
+            }
+            if (e.target === connectBinanceModal) {
+                connectBinanceModal.style.display = 'none';
+            }
+            if (e.target === convertSuccessModal) {
+                convertSuccessModal.style.display = 'none';
+            }
+        });
+        
+        // Inicialización
+        showRegisterScreen();
+        updateConvertOptions(); // Inicializar opciones de conversión
+    </script>
+</body>
+</html>
