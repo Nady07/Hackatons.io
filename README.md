@@ -1,4 +1,5 @@
 🌍 Hackatons.io - Dinero sin fronteras
+
 StellarPay es un proyecto desarrollado durante el hackatón de Stellar LATAM , enfocado en el track 💸 Dinero sin fronteras . Nuestra propuesta busca facilitar los pagos transfronterizos y el uso de criptomonedas como medio de cambio en el extranjero, eliminando barreras de acceso al dinero en viajes internacionales.
 
 🧠 Idea principal
