@@ -14,7 +14,6 @@ Nuestra aplicación móvil propone una solución práctica utilizando la red de 
 🚀 Objetivo
 
 Desarrollar una aplicación accesible que:
-
 Permita convertir fácilmente dinero local a la moneda del país de destino utilizando la red Stellar.
 Muestre un mapa de comercios (bares, restaurantes, tiendas de ropa, etc.) que acepten pagos en cripto.
 Ofrezca una experiencia rápida, segura y sin necesidad de pasar por casas de cambio tradicionales.
@@ -22,7 +21,6 @@ Ofrezca una experiencia rápida, segura y sin necesidad de pasar por casas de ca
 👨‍💻 Tecnologías utilizadas
 
 Actualmente en desarrollo como aplicación móvil , utilizando:
-
 Flutter / React Native (por confirmar)
 HTML + CSS (prototipo visual alojado en GitHub Pages)
 Integración con API de Stellar para operaciones de cambio de moneda
@@ -42,6 +40,7 @@ Desarrollo de funcionalidades móviles en curso.
 En fase de validación y presentación para jurados de Stellar LATAM Hackatón
 
 👥 Equipo
+
 Rol principal: Diseño y desarrollo (Marlene y equipo)
 Participación en el hackatón Stellar LATAM 2025
 
